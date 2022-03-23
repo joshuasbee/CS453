@@ -29,15 +29,17 @@ class Message:
         self._date = ""
         self._id = Message._id_next
         Message._id_next += 1
+        self._clearance = control.PUBLIC
 
     ##################################################
     # MESSAGE NON-DEFAULT CONSTRUCTOR
     # Create a message and fill it
     ##################################################   
-    def __init__(self, text, author, date):
+    def __init__(self, text, author, date, clearance):
         self._text = text
         self._author = author
         self._date = date
+        self._clearance = clearance
         self._id = Message._id_next
         Message._id_next += 1
         self._empty = False
@@ -54,10 +56,13 @@ class Message:
     # Display the attributes/properties but not the
     # content of this message
     ##################################################  
-    def display_properties(self):
+    def display_properties(self, clearance):
         if self._empty:
             return
-        print(f"\t[{self._id}] Message from {self._author} at {self._date}")
+        if (control.security_condition_read(clearance, self._clearance)):
+            print(f"\t[{self._id}] Message from {self._author} at {self._date}")
+        else:
+            print(f"\t[{self._id}] Insufficient Clearance")
 
     ##################################################
     # MESSAGE :: DISPLAY TEXT
@@ -82,3 +87,7 @@ class Message:
         self._author = ""
         self._date = ""
         self._empty = True
+        self._clearance = control.PUBLIC
+
+    def get_clearance_m(self):
+        return self._clearance

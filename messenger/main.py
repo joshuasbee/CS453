@@ -2,10 +2,10 @@
 # Program:
 #    Lab 12, Bell-LaPadula
 # Author:
-#    Br. Helfrich, Kyle Mueller, <your name here if you made a change>
+#    Br. Helfrich, Kyle Mueller, <your nadame here if you made a change>
 # Summary: 
 #    This program is designed to keep track of a number of secret
-#    messages. IT will display messages to the appropriate users
+#    messages. IT will displayabe messages to the appropriate users
 #    and withhold messages from those lacking the authority.
 ########################################################################
 

@@ -27,18 +27,21 @@ class Messages:
     # MESSAGES :: DISPLAY
     # Display the list of messages
     ################################################## 
-    def display(self):
+    def display(self, clearance):
         for m in self._messages:
-            m.display_properties()
+            m.display_properties(clearance)
 
     ##################################################
     # MESSAGES :: SHOW
     # Show a single message
     ################################################## 
-    def show(self, id):
+    def show(self, id, clearance):
         for m in self._messages:
             if m.get_id() == id:
-                m.display_text()
+                if control.security_condition_read(clearance, m.get_clearance_m()):
+                    m.display_text()
+                else:
+                    print(f"ERROR! Insufficient clearance to read.")
                 return True
         return False
 
@@ -46,26 +49,33 @@ class Messages:
     # MESSAGES :: UPDATE
     # Update a single message
     ################################################## 
-    def update(self, id, text):
+    def update(self, id, text, clearance):
         for m in self._messages:
             if m.get_id() == id:
-                m.update_text(text)
-
+                if control.security_condition_write(clearance, m.get_clearance_m()):
+                    m.update_text(text)
+                else:
+                    print("ERROR! Improper clearance to update")
     ##################################################
     # MESSAGES :: REMOVE
     # Remove a single message
     ################################################## 
-    def remove(self, id):
+    def remove(self, id, clearance):
         for m in self._messages:
             if m.get_id() == id:
-                m.clear()
-
+                if control.security_condition_write(clearance, m.get_clearance_m()):
+                    m.clear()
+                    return
+                else:
+                    print("ERROR! Improper clearance to remove")
+                    return
+        print("ERROR! ID not found")
     ##################################################
     # MESSAGES :: ADD
     # Add a new message
     ################################################## 
-    def add(self, text, author, date):
-        m = message.Message(text, author, date)
+    def add(self, text, author, date, text_clearance):
+        m = message.Message(text, author, date, text_clearance)
         self._messages.append(m)
 
     ##################################################
@@ -77,7 +87,7 @@ class Messages:
             with open(filename, "r") as f:
                 for line in f:
                     text_control, author, date, text = line.split('|')
-                    self.add(text.rstrip('\r\n'), author, date)
+                    self.add(text.rstrip('\r\n'), author, date, text_control)
 
         except FileNotFoundError:
             print(f"ERROR! Unable to open file \"{filename}\"")
