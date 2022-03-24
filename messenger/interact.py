@@ -121,6 +121,7 @@ class Interact:
         id_ = self._id_from_user(username)
         if (ID_INVALID != id_ and password == users[id_].password):
             return users[id_].clearance
+        
         return control.PUBLIC
     ##################################################
     # INTERACT :: ID FROM USER
